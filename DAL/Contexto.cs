@@ -18,7 +18,7 @@ namespace RegistroPedidosBlazor.DAL
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //Suplidores--------------------------------------------------
-            modelBuilder.Entity<Suplidores>().HasData(new Suplidores { 
+            modelBuilder.Entity<Suplidores>().HasData(new Suplidores {
                 SuplidorId = 1,
                 Nombres = "Juanito Alimaña"
             });
@@ -54,7 +54,8 @@ namespace RegistroPedidosBlazor.DAL
             });
 
             //Productos--------------------------------------------------
-            modelBuilder.Entity<Productos>().HasData(new Productos { 
+            modelBuilder.Entity<Productos>().HasData(new Productos
+            { 
                 ProductoId = 1,
                 Descripcion = "Agua",
                 Costo = 15,
@@ -62,7 +63,8 @@ namespace RegistroPedidosBlazor.DAL
             
             });
             
-            modelBuilder.Entity<Productos>().HasData(new Productos { 
+            modelBuilder.Entity<Productos>().HasData(new Productos
+            { 
                 ProductoId = 2,
                 Descripcion = "Soda",
                 Costo = 25,
