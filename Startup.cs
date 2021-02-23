@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Blazored.Toast;
 
 namespace RegistroPedidosBlazor
 {
@@ -34,6 +35,10 @@ namespace RegistroPedidosBlazor
 
             //Inyectando contexto
             services.AddDbContext<Contexto>(option => option.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+
+            //Inyectando Toasts 
+            services.AddBlazoredToast();
+        
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
