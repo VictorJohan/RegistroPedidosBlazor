@@ -1,0 +1,14 @@
+﻿@page "/Ordenes" 
+@page "/Ordenes/{OrdenesId:int}" 
+@inject IToastService toast
+
+<EditForm Model="Orden" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator/>
+</EditForm>
+
+@code {
+    [Inject]
+    public OrdenesBLL MyProperty { get; set; }
+    //todo: Falta hacer la BLL de ordenes... ve directamente a hacerla que el resto esta bien.
+
+}
