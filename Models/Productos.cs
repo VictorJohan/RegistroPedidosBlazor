@@ -14,7 +14,7 @@ namespace RegistroPedidosBlazor.Models
         public string Descripcion { get; set; }
         [Range(minimum:10, maximum:1000000, ErrorMessage ="Costo no valido.")]
         public decimal Costo { get; set; }
-        [Range(minimum:1, maximum:999, ErrorMessage ="Cantidad de inventario no valido.")]
+        
         public float Inventario { get; set; }
     }
 }
