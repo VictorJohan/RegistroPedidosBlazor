@@ -12,10 +12,12 @@ namespace RegistroPedidosBlazor.BLL
     public class OrdenesBLL
     {
         private Contexto _contexto { get; set; }
+        private ProductosBLL productosBLL { get; set; }
         
         public OrdenesBLL(Contexto contexto)
         {
             this._contexto = contexto;
+            productosBLL = new ProductosBLL(this._contexto);
 
         }
 
@@ -27,7 +29,7 @@ namespace RegistroPedidosBlazor.BLL
                 return await Modificar(orden);
         }
 
-        private async Task<bool> Existe(int id)
+        public async Task<bool> Existe(int id)
         {
             bool ok = false;
 
@@ -50,6 +52,8 @@ namespace RegistroPedidosBlazor.BLL
 
             try
             {
+                productosBLL.ModificarInventario(orden.Detalle, orden.OrdenId);
+
                 await _contexto.Ordenes.AddAsync(orden);
                 ok = await _contexto.SaveChangesAsync() > 0;
             }
@@ -67,6 +71,8 @@ namespace RegistroPedidosBlazor.BLL
             bool ok = false;
             try
             {
+                productosBLL.ModificarInventario(orden.Detalle, orden.OrdenId);
+
                 _contexto.Database.ExecuteSqlRaw($"DELETE FROM OrdenesDetalle WHERE OrdenId={orden.OrdenId}");
                 foreach (var item in orden.Detalle)
                 {

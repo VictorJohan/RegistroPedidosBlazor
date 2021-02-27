@@ -11,8 +11,8 @@ namespace RegistroPedidosBlazor.BLL
 {
     public class ProductosBLL
     {
-        public Contexto _contexto { get; set; }
-
+        private Contexto _contexto { get; set; }
+       
         public ProductosBLL(Contexto contexto)
         {
             this._contexto = contexto;
@@ -68,7 +68,6 @@ namespace RegistroPedidosBlazor.BLL
 
             try
             {
-                Detached(producto.ProductoId);
                 _contexto.Entry(producto).State = EntityState.Modified;
                 ok = await _contexto.SaveChangesAsync() > 0;
             }
@@ -92,6 +91,8 @@ namespace RegistroPedidosBlazor.BLL
                     .Where(s => s.ProductoId == id)
                     .AsNoTracking()
                     .SingleOrDefaultAsync();
+
+                Detached(id);
             }
             catch (Exception)
             {
@@ -107,10 +108,10 @@ namespace RegistroPedidosBlazor.BLL
             bool ok = false;
             try
             {
-                var registro = await _contexto.Productos.FindAsync(id);
+                var registro = await Buscar(id);
                 if (registro != null)
                 {
-                    _contexto.Entry(registro).State = EntityState.Deleted;
+                    _contexto.Productos.Remove(registro);
                     ok = await _contexto.SaveChangesAsync() > 0;
                 }
             }
@@ -149,6 +150,56 @@ namespace RegistroPedidosBlazor.BLL
 
             if (aux != null)
                 _contexto.Entry(aux).State = EntityState.Detached;
+        }
+
+        private void DetachedOrden(int ordenId)
+        {
+            var aux = _contexto
+                .Set<Ordenes>()
+                .Local
+                .FirstOrDefault(o => o.OrdenId == ordenId);
+
+            if (aux != null)
+                _contexto.Entry(aux).State = EntityState.Detached;
+        }
+
+        internal async void ModificarInventario(List<OrdenesDetalle> detalle, int id)
+        {
+            if (await _contexto.Ordenes.AnyAsync(o =>o.OrdenId == id))
+            {
+                var orden = await _contexto.Ordenes
+                    .Where(o => o.OrdenId == id)
+                    .Include(d => d.Detalle)
+                    .AsNoTracking()
+                    .SingleOrDefaultAsync();
+                foreach (var item in orden.Detalle)
+                {
+                    var producto = await Buscar(item.ProductoId);
+                    producto.Inventario -= item.Cantidad;
+                    _contexto.Entry(producto).State = EntityState.Modified;
+                    _contexto.SaveChanges();
+                }
+
+                foreach (var item in detalle)
+                {
+                    var producto = await Buscar(item.ProductoId);
+                    producto.Inventario += item.Cantidad;
+                    _contexto.Entry(producto).State = EntityState.Modified;
+                    _contexto.SaveChanges();
+                }
+                DetachedOrden(id);
+            }
+            else
+            {
+                foreach (var item in detalle)
+                {
+                    var producto = await Buscar(item.ProductoId);
+                    producto.Inventario += item.Cantidad;
+                    _contexto.Entry(producto).State = EntityState.Modified;
+                    _contexto.SaveChanges();
+                }
+            }
+
         }
     }
 }
