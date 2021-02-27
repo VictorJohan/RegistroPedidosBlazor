@@ -9,7 +9,7 @@ using RegistroPedidosBlazor.DAL;
 namespace RegistroPedidosBlazor.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20210227023236_Migracion_Inicial")]
+    [Migration("20210227044248_Migracion_Inicial")]
     partial class Migracion_Inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
