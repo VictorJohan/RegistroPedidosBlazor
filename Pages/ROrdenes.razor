@@ -208,6 +208,8 @@
 
     private async void Guardar()
     {
+        if (!Validar()) { return; }
+
         Orden.OrdenId = this.OrdenId;
         if (await ordenesBLL.Guardar(Orden))
         {
@@ -290,5 +292,22 @@
         };
 
         DetalleDTO.Add(dto);
+    }
+
+    private bool Validar()
+    {
+        if(!(Orden.SuplidorId >= 1))
+        {
+            toast.ShowWarning("Debe selecionar un suplidor angtes de guardar.");
+            return false;
+        }
+
+        if(Orden.Detalle.Count == 0)
+        {
+            toast.ShowWarning("Agregue como minimo un producto al detalle.");
+            return false;
+        }
+
+        return true;
     }
 }
