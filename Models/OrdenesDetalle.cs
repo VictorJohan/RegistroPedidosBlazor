@@ -14,6 +14,7 @@ namespace RegistroPedidosBlazor.Models
         public int OrdenId { get; set; }
         public decimal Costo { get; set; }
         public int ProductoId { get; set; }
+        public int Cantidad { get; set; }
 
         [ForeignKey("ProductoId")]
         public virtual Productos Producto { get; set; }

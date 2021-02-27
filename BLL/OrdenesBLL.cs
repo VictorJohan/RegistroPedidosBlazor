@@ -67,12 +67,11 @@ namespace RegistroPedidosBlazor.BLL
             bool ok = false;
             try
             {
-                Detached(orden.OrdenId);
-
                 _contexto.Database.ExecuteSqlRaw($"DELETE FROM OrdenesDetalle WHERE OrdenId={orden.OrdenId}");
                 foreach (var item in orden.Detalle)
                 {
                     _contexto.Entry(item).State = EntityState.Added;
+ 
                 }
 
                 _contexto.Entry(orden).State = EntityState.Modified;
@@ -87,7 +86,7 @@ namespace RegistroPedidosBlazor.BLL
             return ok;
         }
 
-        public async Task<Ordenes> Busacar(int id)
+        public async Task<Ordenes> Buscar(int id)
         {
             Ordenes orden;
             try
@@ -95,9 +94,10 @@ namespace RegistroPedidosBlazor.BLL
                 orden = await _contexto.Ordenes
                     .Where(o => o.OrdenId == id)
                     .Include(d => d.Detalle)
-                    .ThenInclude(p => p.Producto)
                     .AsNoTracking()
                     .SingleOrDefaultAsync();
+
+                Detached(id);
             }
             catch (Exception)
             {
@@ -113,7 +113,8 @@ namespace RegistroPedidosBlazor.BLL
             bool ok = false;
             try
             {
-                var registro = await Busacar(id);
+                var registro = await Buscar(id);
+                
                 if(registro != null)
                 {
                     _contexto.Ordenes.Remove(registro);
@@ -146,12 +147,12 @@ namespace RegistroPedidosBlazor.BLL
             return lista;
         }
 
-        private void Detached(int OrdenId)
+        private void Detached(int id)
         {
-            var entidad = _contexto.Set<Ordenes>().Local.FirstOrDefault(o => o.OrdenId == OrdenId);
+            var entidad = _contexto.Set<Ordenes>().Local.FirstOrDefault(o => o.OrdenId == id);
             if(entidad != null)
             {
-                _contexto.Entry(entidad).State = EntityState.Modified;
+                _contexto.Entry(entidad).State = EntityState.Detached;
             }
         }
     }

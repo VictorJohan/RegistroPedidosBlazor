@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Blazored.Toast;
+using RegistroPedidosBlazor.BLL;
 
 namespace RegistroPedidosBlazor
 {
@@ -38,6 +39,11 @@ namespace RegistroPedidosBlazor
 
             //Inyectando Toasts 
             services.AddBlazoredToast();
+
+            //Inyectando BLLs
+            services.AddTransient<ProductosBLL>();
+            services.AddTransient<OrdenesBLL>();
+            services.AddTransient<SuplidoresBLL>();
         
         }
 

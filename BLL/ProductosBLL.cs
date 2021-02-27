@@ -123,7 +123,7 @@ namespace RegistroPedidosBlazor.BLL
             return ok;
         }
 
-        public async Task<List<Productos>> GetSuplidores(Expression<Func<Productos, bool>> criterio)
+        public async Task<List<Productos>> GetProductos(Expression<Func<Productos, bool>> criterio)
         {
             List<Productos> lista = new List<Productos>();
 
